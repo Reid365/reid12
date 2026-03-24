@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entertainment Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 0;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #ff006e, #fb5607, #ffbe0b, #8338ec);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      font-size: 1.2em;
+      color: #aaa;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 12px 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #8338ec;
+      color: white;
+      font-size: 1.1em;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    .tab-btn:hover,
+    .tab-btn.active {
+      background: #8338ec;
+      transform: scale(1.05);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .search-box {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .search-box input {
+      padding: 15px 25px;
+      font-size: 1em;
+      border: 2px solid #8338ec;
+      border-radius: 50px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      width: 100%;
+      max-width: 500px;
+      transition: all 0.3s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #ff006e;
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .search-box input::placeholder {
+      color: #888;
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .item {
+      background: linear-gradient(135deg, rgba(131, 56, 236, 0.2), rgba(248, 58, 58, 0.2));
+      border: 2px solid #8338ec;
+      padding: 25px;
+      border-radius: 15px;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      cursor: pointer;
+    }
+
+    .item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(131, 56, 236, 0.4);
+      border-color: #ff006e;
+    }
+
+    .item-icon {
+      font-size: 3em;
+    }
+
+    .item-title {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .item-desc {
+      font-size: 0.95em;
+      color: #ccc;
+      flex-grow: 1;
+    }
+
+    .item-link {
+      display: inline-block;
+      background: #8338ec;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      text-align: center;
+      font-weight: bold;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95em;
+    }
+
+    .item-link:hover {
+      background: #ff006e;
+      transform: scale(1.05);
+    }
+
+    .category {
+      margin-bottom: 40px;
+    }
+
+    .category-title {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #ffbe0b;
+      border-bottom: 3px solid #8338ec;
+      padding-bottom: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: #888;
+      font-size: 1.2em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+      border-top: 1px solid #333;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      .tabs {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .tab-btn {
+        width: 100%;
+      }
+
+      .items-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🎮 Entertainment Hub</h1>
+    <p class="tagline">Your all-in-one destination for games, music & videos</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('games')">🎮 Games</button>
+    <button class="tab-btn" onclick="switchTab('music')">🎵 Music</button>
+    <button class="tab-btn" onclick="switchTab('videos')">🎬 Videos</button>
+    <button class="tab-btn" onclick="switchTab('other')">⭐ More</button>
+  </div>
+
+  <!-- GAMES TAB -->
+  <div id="games" class="tab-content active">
+    <div class="search-box">
+      <input type="text" id="gameSearch" placeholder="Search games..." oninput="filterItems('games')">
+    </div>
+
+    <div class="category">
+      <h2 class="category-title">🎯 Arcade & Classic</h2>
+      <div class="items-grid" id="arcadeGames"></div>
+    </div>
+
+    <div class="category">
+      <h2 class="category-title">🧩 Puzzle Games</h2>
+      <div class="items-grid" id="puzzleGames"></div>
+    </div>
+
+    <div class="category">
+      <h2 class="category-title">⚔️ Action & Battle</h2>
+      <div class="items-grid" id="actionGames"></div>
+    </div>
+
+    <div class="no-results hidden" id="gamesNoResults">
+      No games found. Try a different search!
+    </div>
+  </div>
+
+  <!-- MUSIC TAB -->
+  <div id="music" class="tab-content">
+    <div class="search-box">
+      <input type="text" id="musicSearch" placeholder="Search music platforms..." oninput="filterItems('music')">
+    </div>
+
+    <div class="category">
+      <h2 class="category-title">🎧 Streaming Services</h2>
+      <div class="items-grid" id="musicItems"></div>
+    </div>
+
+    <div class="no-results hidden" id="musicNoResults">
+      No music services found. Try a different search!
+    </div>
+  </div>
+
+  <!-- VIDEOS TAB -->
+  <div id="videos" class="tab-content">
+    <div class="search-box">
+      <input type="text" id="videoSearch" placeholder="Search video platforms..." oninput="filterItems('videos')">
+    </div>
+
+    <div class="category">
+      <h2 class="category-title">📺 Video Streaming</h2>
+      <div class="items-grid" id="videoItems"></div>
+    </div>
+
+    <div class="no-results hidden" id="videosNoResults">
+      No video services found. Try a different search!
+    </div>
+  </div>
+
+  <!-- OTHER TAB -->
+  <div id="other" class="tab-content">
+    <div class="search-box">
+      <input type="text" id="otherSearch" placeholder="Search tools..." oninput="filterItems('other')">
+    </div>
+
+    <div class="category">
+      <h2 class="category-title">🛠️ Tools & More</h2>
+      <div class="items-grid" id="otherItems"></div>
+    </div>
+
+    <div class="no-results hidden" id="otherNoResults">
+      No tools found. Try a different search!
+    </div>
+  </div>
+
+  <footer>
+    <p>🌐 Entertainment Hub | All links point to legitimate, public services</p>
+  </footer>
+</div>
+
+<script>
+  const content = {
+    arcade: [
+      { title: "2048", desc: "Combine tiles to reach 2048", icon: "🔢", url: "https://play2048.co/" },
+      { title: "Snake", desc: "Classic snake game", icon: "🐍", url: "https://playsnake.org/" },
+      { title: "Pac-Man", desc: "Navigate mazes and ghosts", icon: "👻", url: "https://www.pacman.name/" },
+      { title: "Dino Game", desc: "Chrome's offline dinosaur runner", icon: "🦖", url: "https://chromedino.com/" },
+      { title: "Flappy Bird", desc: "Tap to fly through obstacles", icon: "🐦", url: "https://flappybird.io/" },
+      { title: "Breakout", desc: "Classic brick breaker", icon: "🧱", url: "https://playcanvas.com/project/576957/editor" }
+    ],
+    puzzle: [
+      { title: "Tetris", desc: "Stack blocks perfectly", icon: "📦", url: "https://tetris.com/play-tetris" },
+      { title: "Tic Tac Toe", desc: "Classic X and O game", icon: "⭕", url: "https://playtictactoe.org/" },
+      { title: "Sudoku", desc: "Number puzzle game", icon: "🔐", url: "https://sudoku.com/" },
+      { title: "Memory Match", desc: "Match pairs of cards", icon: "🎴", url: "https://www.concentration-game.com/" }
+    ],
+    action: [
+      { title: "1v1.LOL", desc: "Build & battle multiplayer", icon: "⚔️", url: "https://1v1.lol/" },
+      { title: "Slope", desc: "Roll down endless slopes", icon: "⛷️", url: "https://playcanvas.com/play/slope" },
+      { title: "Run 3", desc: "Jump through space levels", icon: "🏃", url: "https://www.kongregate.com/games/player-03/run-3" },
+      { title: "Subway Surfers", desc: "Endless subway runner", icon: "🚇", url: "https://www.subwaysurfers.org/" }
+    ],
+    music: [
+      { title: "Spotify", desc: "Stream millions of songs", icon: "🎵", url: "https://open.spotify.com/" },
+      { title: "YouTube Music", desc: "Music & official artists", icon: "▶️", url: "https://music.youtube.com/" },
+      { title: "SoundCloud", desc: "Independent artists & mixes", icon: "☁️", url: "https://soundcloud.com/" },
+      { title: "Apple Music", desc: "Access millions of songs", icon: "🍎", url: "https://music.apple.com/" },
+      { title: "Deezer", desc: "Music streaming platform", icon: "🎧", url: "https://www.deezer.com/" },
+      { title: "Tidal", desc: "High-fidelity music streaming", icon: "🌊", url: "https://tidal.com/" }
+    ],
+    videos: [
+      { title: "YouTube", desc: "Videos, shorts, live streams", icon: "▶️", url: "https://www.youtube.com/" },
+      { title: "Vimeo", desc: "High-quality video platform", icon: "🎬", url: "https://vimeo.com/" },
+      { title: "DailyMotion", desc: "Video sharing platform", icon: "📹", url: "https://www.dailymotion.com/" },
+      { title: "Twitch", desc: "Live streaming platform", icon: "📡", url: "https://www.twitch.tv/" },
+      { title: "Netflix", desc: "Movies & series streaming", icon: "📺", url: "https://www.netflix.com/" },
+      { title: "Plex", desc: "Movies & shows for free", icon: "🎥", url: "https://www.plex.tv/" }
+    ],
+    other: [
+      { title: "Chat", desc: "Instant messaging", icon: "💬", url: "https://chat.openai.com/" },
+      { title: "Drawing", desc: "Online drawing tool", icon: "🎨", url: "https://skribbl.io/" },
+      { title: "Code Editor", desc: "Write & run code", icon: "💻", url: "https://replit.com/" },
+      { title: "Quiz", desc: "Sporcle trivia & quizzes", icon: "🧠", url: "https://www.sporcle.com/" },
+      { title: "Read", desc: "Free ebooks & stories", icon: "📖", url: "https://www.gutenberg.org/" },
+      { title: "Learn", desc: "Free courses online", icon: "🎓", url: "https://www.coursera.org/" }
+    ]
+  };
+
+  function createItem(item, searchId = null) {
+    const el = document.createElement('a');
+    el.href = item.url;
+    el.target = "_blank";
+    el.className = 'item';
+    el.setAttribute('data-search', searchId ? item.title.toLowerCase() + ' ' + item.desc.toLowerCase() : '');
+    el.innerHTML = `
+      <div class="item-icon">${item.icon}</div>
+      <div class="item-title">${item.title}</div>
+      <div class="item-desc">${item.desc}</div>
+      <div style="color: #8338ec; font-size: 0.9em;">→ Open in new tab</div>
+    `;
+    return el;
+  }
+
+  function renderGames() {
+    document.getElementById('arcadeGames').innerHTML = '';
+    document.getElementById('puzzleGames').innerHTML = '';
+    document.getElementById('actionGames').innerHTML = '';
+
+    content.arcade.forEach(item => {
+      document.getElementById('arcadeGames').appendChild(createItem(item, 'game'));
+    });
+    content.puzzle.forEach(item => {
+      document.getElementById('puzzleGames').appendChild(createItem(item, 'game'));
+    });
+    content.action.forEach(item => {
+      document.getElementById('actionGames').appendChild(createItem(item, 'game'));
+    });
+  }
+
+  function renderMusic() {
+    document.getElementById('musicItems').innerHTML = '';
+    content.music.forEach(item => {
+      document.getElementById('musicItems').appendChild(createItem(item, 'music'));
+    });
+  }
+
+  function renderVideos() {
+    document.getElementById('videoItems').innerHTML = '';
+    content.videos.forEach(item => {
+      document.getElementById('videoItems').appendChild(createItem(item, 'video'));
+    });
+  }
+
+  function renderOther() {
+    document.getElementById('otherItems').innerHTML = '';
+    content.other.forEach(item => {
+      document.getElementById('otherItems').appendChild(createItem(item, 'other'));
+    });
+  }
+
+  function switchTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+      tab.classList.remove('active');
+    });
+
+    // Remove active from buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    // Show selected tab
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+
+    // Clear searches
+    document.querySelectorAll('.search-box input').forEach(input => {
+      input.value = '';
+    });
+  }
+
+  function filterItems(tab) {
+    let searchId, searchSelector, noResultsId;
+
+    if (tab === 'games') {
+      searchId = 'gameSearch';
+      searchSelector = '#arcadeGames .item, #puzzleGames .item, #actionGames .item';
+      noResultsId = 'gamesNoResults';
+    } else if (tab === 'music') {
+      searchId = 'musicSearch';
+      searchSelector = '#musicItems .item';
+      noResultsId = 'musicNoResults';
+    } else if (tab === 'videos') {
+      searchId = 'videoSearch';
+      searchSelector = '#videoItems .item';
+      noResultsId = 'videosNoResults';
+    } else if (tab === 'other') {
+      searchId = 'otherSearch';
+      searchSelector = '#otherItems .item';
+      noResultsId = 'otherNoResults';
+    }
+
+    const query = document.getElementById(searchId).value.toLowerCase();
+    const items = document.querySelectorAll(searchSelector);
+    let visibleCount = 0;
+
+    items.forEach(item => {
+      const text = item.getAttribute('data-search');
+      if (text.includes(query)) {
+        item.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    document.getElementById(noResultsId).classList.toggle('hidden', visibleCount > 0);
+  }
+
+  // Initialize
+  renderGames();
+  renderMusic();
+  renderVideos();
+  renderOther();
+</script>
+
+</body>
+</html>
